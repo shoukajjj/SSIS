@@ -15,36 +15,37 @@
     .container{
         width: 800px;
     }
+    .h5{
+        text-align: center;
+    }
 </style>
 </head>
 <body style="background-color:rgb(233, 231, 231);">
-    <div class="jumbotron p-2">
-        <div class= " text-center">
-            <h1>Simple Student Information System</h1>
-        </div>
+<div class="jumbotron p-2">
+    <div class= " text-center">
+        <h1>Simple Student Information System</h1>
     </div>
-    
-    <div>
-        <header class="d-flex justify-content-center py-3">
-          <ul class="nav nav-pills">
-            <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
-            <li class="nav-item"><a href="/college" class="nav-link active" aria-current="page">College</a></li>
-            <li class="nav-item"><a href="/courses" class="nav-link">Course</a></li>
-            <li class="nav-item"><a href="/student" class="nav-link">Student</a></li>
-          </ul>
-        </header>
-      </div>
+</div>
+
+<div>
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="/" class="nav-link" >Student</a></li>
+        <li class="nav-item"><a href="/college" class="nav-link active" aria-current="page" >College</a></li>
+        <li class="nav-item"><a href="/courses" class="nav-link">Course</a></li>
+       
+      </ul>
+    </header>
+  </div>
 
       <div class="container">
          <div class = "row">
             <div class="col-md-8">
               <h4>College List</h4>
-                </div>
-                <div class="col-md-4">
-                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalid">Add College</button>
             </div>
-         </div>
+        </div>
       </div>
+                
 
         <div class="container"> 
           
@@ -62,41 +63,43 @@
                             <td>{{row.0}}</td>
                             <td>{{row.1}}</td>
                             <td>
-                             <a href="/editcollege/{{row.0}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit">Edit</a>
-                             <a href="/delcollege/{{row.0}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete ?')">Delete</a>
+                             <a href="/editcollege/{{row.0}}" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}">Edit</a>
+                             
                             </td>
                         </tr>
                 </tbody>
+                    <!-- Edit Modal -->
+                    <div class="modal fade" id="modaledit{{row.0}}" tabindex="-1" aria-labelledby="modaledit" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="54">Update College</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class = "card mt-30">
+                                        <div class = "card-body">
+                                                <!-- input fields for add_student action -->
+                                            <form class = "form" action = "/editcollege" method = "POST">
+                                                <label for = "college_code">College Code</label>
+                                                <input type = "text" class = "form-control" value ="{{row.0}}"disabled>
+                                                <input type = "hidden" name = "college_code" id = "college_code" class = "form-control" value ="{{row.0}}"><br>
+                                                <label for = "college_name">College Name</label>
+                                                <input type = "text" name = "college_name" id = "college_name" class = "form-control"><br>
+                                                <input type = "submit" class = "btn btn-light" style = "text-align: center;" value = "Update College">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
             </table>
         </div>
     
         
-             <!-- Modal -->
-        <div class="modal fade" id="modalid" tabindex="-1" aria-labelledby="modalid" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="54">Add College</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class = "card mt-30">
-                            <div class = "card-body">
-                                     <!-- input fields for add_student action -->
-                                <form class = "form" action = "/addcollege" method = "POST">
-                                    <label for = "college_code">College Code</label>
-                                    <input type = "text" name = "college_code" id = "college_code" class = "form-control" ><br>
-                                    <label for = "college_name">College Name</label>
-                                    <input type = "text" name = "college_name" id = "college_name" class = "form-control"><br>
-                                    <input type = "submit" class = "btn btn-light" style = "text-align: center;" value = "Add College">
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
 
 

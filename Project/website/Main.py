@@ -17,20 +17,20 @@ app.config['MYSQL_DB'] = 'stud_db'
 
 mysql = MySQL(app)
 
-@app.route('/')
-def base():
-   return render_template('base.html')
+
 
 
 
 #main pages
-@app.route('/student')
+@app.route('/')
 def student():
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT * FROM student ORDER BY id_number")
     data = cursor.fetchall()
+    cursor.execute("SELECT course_code FROM courses")
+    data1 = cursor.fetchall()
     print(data)
-    return render_template('student.html',student = data)
+    return render_template('base.html',student = data, courses = data1 )
 
 
 @app.route('/college')
@@ -47,9 +47,10 @@ def courses():
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT * FROM courses")
     data = cursor.fetchall()
+    cursor.execute("SELECT college_code FROM college")
+    data1 = cursor.fetchall()
     print(data)
-    return render_template('course.html', courses=data)
-
+    return render_template('course.html', courses=data, college=data1)
 
 
 #add functions
@@ -60,12 +61,13 @@ def addcollege():
     if request.method == 'POST':
         college_code = request.form['college_code']
         college_name = request.form['college_name']
+        
     
         #plug inputs into database
         cursor = mysql.connection.cursor()
         cursor.execute('''INSERT INTO college VALUES(%s,%s)''',(college_code,college_name))
         mysql.connection.commit()
-        cursor.close()
+        cursor.close()      
         return redirect(url_for('college'))
         
 
@@ -76,13 +78,13 @@ def add():
         id_number = request.form['id_num']
         last_name = request.form['lname']
         first_name = request.form['fname']
-        course = request.form['course']
+        course_code = request.form['course_code']
         year_level = request.form['year']
         gender = request.form['gender']
 
         #plug inputs into database
         cursor = mysql.connection.cursor()
-        cursor.execute('''INSERT INTO student VALUES(%s,%s,%s,%s,%s,%s)''',(id_number, first_name, last_name, course, year_level, gender))
+        cursor.execute('''INSERT INTO student VALUES(%s,%s,%s,%s,%s,%s)''',(id_number, first_name, last_name, course_code, year_level, gender))
         mysql.connection.commit()
         cursor.close()
         return redirect(url_for('student'))
@@ -95,20 +97,20 @@ def addcourse():
         course_code = request.form['course_code']
         course_name = request.form['course_name']
         college_code = request.form['college_code']
-    
+        
         #plug inputs into database
         cursor = mysql.connection.cursor()
-        cursor.execute('''INSERT INTO courses VALUES(%s,%s)''',(course_code,course_name))
+        cursor.execute('''INSERT INTO courses VALUES(%s,%s,%s)''',(course_code,course_name,college_code))
         mysql.connection.commit()
         cursor.close()
-        return redirect(url_for('course'))
+        return redirect(url_for('courses'))
 
 
 
 
 #edit functions
 @app.route("/editcollege", methods = ['POST'])
-def aeditcollege():
+def editcollege():
     #requests input from webpage
     if request.method == 'POST':
         college_code = request.form['college_code']
@@ -116,7 +118,7 @@ def aeditcollege():
     
         #plug inputs into database
         cursor = mysql.connection.cursor()
-        cursor.execute('''UPDATE college set college_code=%s, college_name=%s ''',(college_code,college_name))
+        cursor.execute('''UPDATE college SET  college_name=%s WHERE college_code=%s''',(college_code,college_name))
         mysql.connection.commit()
         cursor.close()
         return redirect(url_for('college'))
@@ -128,14 +130,14 @@ def editstudent():
         id_number = request.form['id_num']
         last_name = request.form['lname']
         first_name = request.form['fname']
-        course = request.form['course']
+        course_code = request.form['course_code']
         year_level = request.form['year']
         gender = request.form['gender']
 
         #plug inputs into database
         cursor = mysql.connection.cursor()
-        cursor.execute('''UPDATE student set id_number=%s,first_name=%s,last_name=%s,course=%s,year_level=%s,gender=%s ''',
-        (id_number, first_name, last_name, course, year_level, gender))
+        cursor.execute('''UPDATE student SET first_name=%s,last_name=%s,course_code=%s,year_level=%s,gender=%s WHERE id_number=%s ''',
+        ( first_name, last_name, course_code, year_level, gender,id_number))
         mysql.connection.commit()
         cursor.close()
         return redirect(url_for('student')) 
@@ -151,10 +153,10 @@ def editcourse():
     
         #plug inputs into database
         cursor = mysql.connection.cursor()
-        cursor.execute('''UPDATE courses set course_code=%s,course_name=%s,college_code=%s)''',(course_code,course_name,college_code))
+        cursor.execute('''UPDATE courses SET course_name=%s,college_code=%s WHERE course_code=%s''',(course_name,college_code, course_code))
         mysql.connection.commit()
         cursor.close()
-        return redirect(url_for('course'))
+        return redirect(url_for('courses'))
        
        
 
@@ -163,30 +165,20 @@ def editcourse():
 
 #delete functions
 
-@app.route("/delcollege/<string:college_code>", methods =['GET'])
-def delcollege(college_code):
-        cursor = mysql.connection.cursor()
-        cursor.execute('''DELETE FROM college WHERE college_code = %s''',(college_code,))
-        mysql.connection.commit()
-        cursor.close()
-
-        return redirect(url_for("college"))   
-
-
 @app.route("/delcourses/<string:course_code>", methods =['GET'])
 def delcourses(course_code):
         cursor = mysql.connection.cursor()
-        cursor.execute('''DELETE FROM college WHERE college_code = %s''',(course_code,))
+        cursor.execute('''DELETE FROM courses WHERE course_code = %s''',(course_code,))
         mysql.connection.commit()
         cursor.close()
 
-        return redirect(url_for("course"))   
+        return redirect(url_for("courses"))   
 
 
-@app.route("/delstudent/<string:id_num>", methods =['GET'])
+@app.route("/delstudent/<string:id_number>", methods =['GET'])
 def delstudent(id_number):
         cursor = mysql.connection.cursor()
-        cursor.execute('''DELETE FROM college WHERE college_code = %s''',(id_number,))
+        cursor.execute('''DELETE FROM student WHERE id_number = %s''',(id_number,))
         mysql.connection.commit()
         cursor.close()
 
