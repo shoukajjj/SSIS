@@ -44,9 +44,8 @@
                     <td>{{row.3}}</td>
                     <td>{{row.4}}</td>
                     <td>{{row.5}}</td>
-                    <td>{{row.6}}</td>
-                    <td>{{row.7}}</td>
-                    <!-- <td><a href="{{row.img_url}}" target="_blank"><img src = "{{row.img_url}}" class="img-thumbnail" style="height: 50px; width: 50px; object-fit: cover;"></a></td> -->
+                   
+                    <td><a href="{{row.6}}" target="_blank"><img src = "{{row.6}}" class="img-thumbnail" style="height: 50px; padding: 0 !important; width: 50px; object-fit: cover;"></a></td> 
                     <td>
                       <a href = "/editstudent/{{row.0}}" class = "btn btn-warning" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}" >Edit</a>
                       <a href = "/delstudent/{{row.0}}" class = "btn btn-danger" onclick="return confirm('Are you sure about deleting this student? It cannot be undone')">Delete</a>
@@ -72,12 +71,12 @@
                               <input type = "hidden" name = "id_num" id = "id_num" class = "form-control" value = "{{row.0}}" ><br>
 
                               <label for = "fname">First Name</label>
-                              <input type = "text" name = "fname" id = "fname" class = "form-control"><br>
+                              <input type = "text" name = "fname" id = "fname" class = "form-control" value = "{{row.2}}"><br>
 
                               <label for = "lname">Last Name</label>
-                              <input type = "text" name = "lname" id = "lname" class = "form-control"><br>
+                              <input type = "text" name = "lname" id = "lname" class = "form-control" value = "{{row.1}}"><br>
 
-                              <select class="form-select" name = "courses_code" aria-label="Default select example">
+                              <select class="form-select" name = "course_code" aria-label="Default select example">
                                 <option selected disabled >Course Code</option>
                                 {% for row in courses %}
                                 <option value="{{row.0}}">{{row.0}}</option>
@@ -85,14 +84,14 @@
                               </select><br>
 
                               <label for = "course">Year Level</label>
-                              <input type = "number" name = "year" id = "year" class = "form-control"><br>
+                              <input type = "number" name = "year" id = "year" class = "form-control" value = "{{row.4}}"><br>
                             
                               <label for = "course">Gender</label>
-                              <input type = "text" name = "gender" id = "gender" class = "form-control" placeholder = "Male or Female"><br>
+                              <input type = "text" name = "gender" id = "gender" value = "{{row.5}}" class = "form-control" placeholder = "Male or Female"><br>
 
                               <label for = "file">Profile Picture</label>
                               <br>
-                              <input type = "file" value="{{row.7}}" name = "file" id = "file" class = "form-control-file" accept = "image/*"><br>
+                              <input type = "file"  value="{{row.7}}" name = "file" id = "file" class = "form-control-file" accept = "image/*" required><br>
                               <br>
                               
                               <input type = "submit" class = "btn btn-primary btn-block btn-lg" style = "text-align: center;" value = "Update">

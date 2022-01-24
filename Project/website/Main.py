@@ -40,7 +40,7 @@ def uploadImage(image):
     uploadResult = cloudinary.uploader.upload(image, folder="SSIS-Profile-Icons",
                                               eager=[{"width": 50, "height": 50, "crop": "fill"}])
 
-    return uploadResult['secure_url'], uploadResult['eager'][0]['secure_url']
+    return uploadResult['secure_url']
 
 
 #Main student page
@@ -68,11 +68,18 @@ def add():
         gender = request.form['gender']
         image = request.files['file']
 
-        img_url = uploadImage(image)
+        img_url = ''
+        
+        if image:
+            img_url = uploadImage(image)
+            cursor = mysql.connection.cursor()
+            cursor.execute(f'''INSERT INTO student (img_url) VALUES img_url='{img_url}' WHERE id_number='{id_number}' ''')
+            mysql.connection.commit()
 
         #plug inputs into database
         cursor = mysql.connection.cursor()
-        cursor.execute('''INSERT INTO student VALUES (%s,%s,%s,%s,%s,%s,%s) ''', (id_number, first_name, last_name, course_code, year_level, gender,img_url, ))
+        cursor.execute(f"INSERT INTO student VALUES ('{id_number}','{last_name}','{first_name}','{course_code}',{year_level},'{gender}','{img_url}');")
+        # cursor.execute(f"""INSERT INTO student VALUES ('{id_number}','{last_name}','{first_name}','{course_code}',{year_level},'{gender}','{img_url}'); """)
         mysql.connection.commit()
         cursor.close()
         return redirect(url_for('student'))
@@ -86,7 +93,7 @@ def editstudent():
         id_number = request.form['id_num']
         last_name = request.form['lname']
         first_name = request.form['fname']
-        course_code = request.form['courses_code']
+        course_code = request.form['course_code']
         year_level = request.form['year']
         gender = request.form['gender']
         image = request.files['file']
@@ -95,14 +102,12 @@ def editstudent():
         if image:
             img_url = uploadImage(image)
             cursor = mysql.connection.cursor()
-            cursor.execute('''UPDATE student SET img_url=%s WHERE id_number=%s ''',
-            (id_number,img_url,))
+            cursor.execute(f'''UPDATE student SET img_url='{img_url}' WHERE id_number='{id_number}' ''')
             mysql.connection.commit()
 
         #plug inputs into database
         cursor = mysql.connection.cursor()
-        cursor.execute('''UPDATE student SET last_name=%s,first_name=%s,course_code=%s,year_level=%s,gender=%s,img_url=%s WHERE id_number=%s ''',
-        (id_number,last_name, first_name, course_code, year_level, gender,img_url,))
+        cursor.execute(f'''UPDATE student SET last_name='{last_name}',first_name='{first_name}',course='{course_code}',year_level='{year_level}',gender='{gender}' WHERE id_number='{id_number}' ''')
         mysql.connection.commit()
         cursor.close()
         return redirect(url_for('student')) 

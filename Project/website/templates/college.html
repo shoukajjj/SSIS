@@ -28,47 +28,52 @@
                             <th> </th>
                       </tr>
                   </thead>
-                {% for row in college %}
+                
                 <tbody>
+                  {% for row in college %}
                         <tr>
                             <td>{{row.0}}</td>
                             <td>{{row.1}}</td>
                             <td>
-                             <a href="/colleges/editcollege/{{row.0}}" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}">Edit</a>
-                             
-                            </td>
+                             <a href="/colleges/editcollege/{{row.0}}" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modaledit">Edit</a>
+                             </td>
                         </tr>
+                  {% endfor %}
                 </tbody>
-                    <!-- Edit Modal -->
-                    <div class="modal fade" id="modaledit{{row.0}}" tabindex="-1" aria-labelledby="modaledit" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="54">Update College</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class = "card mt-30">
-                                        <div class = "card-body">
-                                                <!-- input fields for edit college action -->
-                                            <form class = "form" action = "{{url_for('colleges.editcollege')}}" method = "POST">
-                                                <label for = "college_code">College Code</label>
-                                                <input type = "text" class = "form-control" value ="{{row.0}}"disabled>
-                                                <input type = "hidden" name = "college_code" id = "college_code" class = "form-control" value ="{{row.0}}"><br>
-
-                                                <label for = "college_name">College Name</label>
-                                                <input type = "text" name = "college_name" id = "college_name"  class = "form-control"><br>
-                                                <input type = "submit" class = "btn btn-light" style = "text-align: center;" value = "Update College">
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
             </table>
         </div>
 
+      <!-- Edit College Modal -->
+      <div class="modal fade" id="modaledit" tabindex="-1" aria-labelledby="modaledit" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="54">Update College</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class = "card mt-30">
+                        <div class = "card-body">
+                                 <!-- input fields for add_student action -->
+                            <form class = "form" action = "{{url_for('colleges.editcollege')}}" method = "POST">
+                                <label for = "course_code" >College Code</label>
+                                
+                                <input type = "text" name = "college_code" id = "college_code" class = "form-control" ><br>
 
-{% endblock content %}
+                                <label for = "course_name">College Name</label>
+                                <input type = "text" name = "college_name" id = "college_name" class = "form-control" ><br>                                                                                                           
+                                      <div>    
+                                          <input type = "submit" class = "btn btn-light"  value = "Update College">
+                                      </div>
+                                  </form>
+                                 </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                 </div>
+        </table>
+    </div> 
+
+                
+{% endblock %}
